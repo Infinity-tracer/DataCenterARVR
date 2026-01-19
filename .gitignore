@@ -1,0 +1,102 @@
+# ===== Unity Project (XR2IND-VR) =====
+# Unity generated folders
+XR2IND-VR/[Ll]ibrary/
+XR2IND-VR/[Tt]emp/
+XR2IND-VR/[Oo]bj/
+XR2IND-VR/[Bb]uild/
+XR2IND-VR/[Bb]uilds/
+XR2IND-VR/[Ll]ogs/
+XR2IND-VR/[Uu]ser[Ss]ettings/
+XR2IND-VR/[Mm]emoryCaptures/
+XR2IND-VR/[Rr]ecordings/
+
+# Visual Studio / IDE files
+.vs/
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity meta files for debug
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity crash reports
+sysinfo.txt
+
+# Build outputs
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+
+# ===== Python Project (llm-chat-engine) =====
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Project specific
+llm-chat-engine/storage/
+llm-chat-engine/vector_store/
+
+# ===== General =====
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets - NEVER commit these
+*.key
+*.pem
+.env.local
+.env.*.local

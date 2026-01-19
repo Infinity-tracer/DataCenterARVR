@@ -1,0 +1,21 @@
+version: '3'
+services:
+  llm-engine:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY= your_key
+      - REDIS_URL=redis://redis:6379
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - redis
+    volumes:
+      - ./vector_store:/app/vector_store
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
