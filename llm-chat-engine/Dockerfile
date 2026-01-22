@@ -11,15 +11,17 @@ RUN pip install poetry
 # - Do not create a virtual environment inside the container
 # - Install only package dependencies (skip dev-dependencies)
 RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev -vvv
+RUN poetry install --only main -vvv
 RUN pip install llama_index
 
+# Create vector_store directory
+RUN mkdir -p /app/vector_store
 
-# Set environment variables
-# TODO: Set your OpenAI API key here or use docker-compose environment
-ENV OPENAI_API_KEY="your-openai-api-key"
+# OpenAI API key and other secrets should be set via Render environment variables
+# Do NOT hardcode API keys in this file
 
-EXPOSE 8000
+EXPOSE 10000
 
 # Command to run the FastAPI application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Render sets the PORT environment variable
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}

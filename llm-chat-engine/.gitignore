@@ -1,4 +1,7 @@
 __pycache__
 storage
+vector_store
 .env
 .idea
+*.pyc
+.DS_Store

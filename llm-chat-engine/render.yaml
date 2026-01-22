@@ -1,0 +1,23 @@
+services:
+  # LLM Chat Engine API
+  - type: web
+    name: llm-chat-engine
+    runtime: docker
+    plan: free  # Change to 'starter' ($7/month) for better performance
+    healthCheckPath: /docs
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false  # You'll set this manually in Render dashboard
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: llm-redis
+          property: connectionString
+      - key: ENVIRONMENT
+        value: prod
+
+  # Redis for caching
+  - type: redis
+    name: llm-redis
+    plan: free  # Free tier: 25MB, good for testing
+    ipAllowList: []  # Only allow internal connections

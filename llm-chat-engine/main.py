@@ -31,16 +31,18 @@ app = FastAPI()
 
 environment = os.getenv("ENVIRONMENT", "dev")  # Default to 'development' if not set
 
-if environment == "dev":
-    logger = logging.getLogger("uvicorn")
-    logger.warning("Running in development mode - allowing CORS for all origins")
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+# Setup logger
+logger = logging.getLogger("uvicorn")
+
+# Enable CORS for all environments (needed for Unity/Quest to connect)
+logger.info(f"Running in {environment} mode - allowing CORS for all origins")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 logger.info("inside main")
 
