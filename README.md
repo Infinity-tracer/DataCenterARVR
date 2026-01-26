@@ -66,11 +66,8 @@ A live instance is available for the VR app to connect to immediately:
 
 Explore the project further with these resources:
 
-### Click on play button see Demo:
-
-<video src="DemoPrismVIdeo.mp4" controls="controls" style="max-width: 100%;">
-  Your browser does not support the video tag.
-</video>
+[![Download Demo Video](https://img.shields.io/badge/🎥_Download-Demo_Video-FF0000?style=for-the-badge)](DemoPrismVIdeo.mp4)
+> Please download the video to watch the demo.
 
 [![Presentation](https://img.shields.io/badge/📄_View-Presentation_PDF-00599E?style=for-the-badge)](iMMERSIVIEW.pdf)
 [![Prism Report](https://img.shields.io/badge/📄_View-Project_Report-FF8C00?style=for-the-badge)](PrismReport.pdf)
