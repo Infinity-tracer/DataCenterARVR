@@ -15,8 +15,12 @@ public class LLMScreen : MonoBehaviour
 	[SerializeField] private string llmServerUrl = "https://llm-chat-engine.onrender.com/api/chat";
 	
 	[Header("OpenAI Configuration")]
+<<<<<<< HEAD
 	// TODO: Load the OpenAI API key securely (e.g., from environment variable, config, or Unity secret manager)
 	private const string openAIApiKey = ""; // DO NOT HARDCODE SECRETS
+=======
+	private const string openAIApiKey = "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";
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 	private const string OPENAI_WHISPER_URL = "https://api.openai.com/v1/audio/transcriptions";
 	
 	[Header("UI References")]
@@ -42,9 +46,12 @@ public class LLMScreen : MonoBehaviour
 
 	void Start()
 	{
+<<<<<<< HEAD
 		// Force TLS 1.2 (essential for modern web requests in Unity)
 		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 		
+=======
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 		text = textRect.GetComponent<TextMeshProUGUI>();
 		panelElements = new List<RectTransform> { textRect, loadingRect };
 		ShowCanvas(false);
@@ -68,6 +75,7 @@ public class LLMScreen : MonoBehaviour
 		
 		Debug.Log("LLMScreen initialized successfully");
 		Debug.Log("OpenAI API Key configured: " + (string.IsNullOrEmpty(openAIApiKey) ? "NO" : "YES"));
+<<<<<<< HEAD
 		Debug.Log($"LLM Server URL: {llmServerUrl}");
 		
 		// Run network diagnostic test
@@ -134,6 +142,8 @@ public class LLMScreen : MonoBehaviour
 		}
 		
 		Debug.LogError("🔍 DIAGNOSTIC COMPLETE");
+=======
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 	}
 
 	private void CheckMicrophoneAvailability()
@@ -413,6 +423,7 @@ public class LLMScreen : MonoBehaviour
 
 	public void AskTheLLM(string prompt)
 	{
+<<<<<<< HEAD
 		Debug.Log($"🤖 Asking LLM: {prompt}");
 		UpdateText($"You: {prompt}\n\n⏳ AI is thinking...\n(First request may take 30-60s if server is sleeping)");
 		StartCoroutine(SendLLMRequest(prompt));
@@ -456,6 +467,39 @@ public class LLMScreen : MonoBehaviour
 				string responseBody = request.downloadHandler.text;
 				Debug.Log($"📥 Raw Response: {responseBody}");
 				
+=======
+		try
+		{
+			Debug.Log($"🤖 Asking LLM: {prompt}");
+			UpdateText($"You: {prompt}\n\n⏳ AI is thinking...\n(First request may take 30-60s if server is sleeping)");
+			
+			HttpClient client = new HttpClient();
+			client.Timeout = TimeSpan.FromSeconds(60);
+			
+			string jsonPayload = $@"{{
+				""messages"": [
+					{{
+						""role"": ""user"",
+						""content"": ""{EscapeJson(prompt)}""
+					}}
+				]
+			}}";
+			
+			Debug.Log($"📤 Sending to LLM: {jsonPayload}");
+			
+			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, llmServerUrl);
+			request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+			
+			HttpResponseMessage response = await client.SendAsync(request);
+			
+			Debug.Log($"📊 Response Status Code: {response.StatusCode}");
+			
+			string responseBody = await response.Content.ReadAsStringAsync();
+			Debug.Log($"📥 Raw Response: {responseBody}");
+			
+			if (response.IsSuccessStatusCode)
+			{
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 				if (string.IsNullOrEmpty(responseBody))
 				{
 					NewLineTextAppend("AI: (Empty response)");
@@ -472,6 +516,7 @@ public class LLMScreen : MonoBehaviour
 			}
 			else
 			{
+<<<<<<< HEAD
 				Debug.LogError($"❌ LLM Error: {request.error}");
 				Debug.LogError($"Response Code: {request.responseCode}");
 				Debug.LogError($"Response: {request.downloadHandler?.text}");
@@ -489,6 +534,25 @@ public class LLMScreen : MonoBehaviour
 				
 				NewLineTextAppend($"❌ AI Error: {errorMessage}");
 			}
+=======
+				Debug.LogError($"❌ LLM HTTP Error: {response.StatusCode}");
+				Debug.LogError($"Error Body: {responseBody}");
+				NewLineTextAppend($"❌ AI Error: Server returned {response.StatusCode}");
+			}
+			
+			client.Dispose();
+		}
+		catch (System.Net.Http.HttpRequestException e)
+		{
+			Debug.LogError($"❌ LLM HTTP Error: {e.Message}");
+			NewLineTextAppend("❌ AI Error: Connection failed. Check if server is running.");
+		}
+		catch (Exception e)
+		{
+			Debug.LogError($"❌ LLM Error: {e.Message}");
+			Debug.LogError($"Stack trace: {e.StackTrace}");
+			NewLineTextAppend("❌ AI Error: " + e.Message);
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 		}
 	}
 
@@ -651,6 +715,7 @@ public class LLMScreen : MonoBehaviour
 public class WhisperResponse
 {
 	public string text;
+<<<<<<< HEAD
 }
 
 // Certificate handler to bypass SSL validation in development
@@ -662,4 +727,6 @@ public class BypassCertificateHandler : CertificateHandler
 		// WARNING: Only use in development, not production!
 		return true;
 	}
+=======
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
 }

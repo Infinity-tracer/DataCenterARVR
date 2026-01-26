@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e4a11424bacd4418fb6c47ff99b12a, type: 3}
   m_Name: HuggingFaceAPIConfig
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   _apiKey: ""
+=======
+  _apiKey: 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
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
   _useBackupEndpoints: 1
   _waitForModel: 1
   _maxTimeout: 3
   _taskEndpoints:
   - taskName: AutomaticSpeechRecognition
+<<<<<<< HEAD
     endpoint: https://api-inference.huggingface.co/models/openai/whisper-tiny
+=======
+    endpoint: https://api-inference.huggingface.co/models/facebook/wav2vec2-base-960h
+>>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
   - taskName: Conversation
     endpoint: https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill
   - taskName: QuestionAnswering
@@ -32,7 +40,7 @@ MonoBehaviour:
   - taskName: TextGeneration
     endpoint: https://api-inference.huggingface.co/models/gpt2
   - taskName: TextToImage
-    endpoint: https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5
+    endpoint: https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4
   - taskName: Translation
     endpoint: https://api-inference.huggingface.co/models/t5-base
   - taskName: ZeroShotTextClassification
