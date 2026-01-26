@@ -74,7 +74,16 @@ Once Unity is installed and the headset is set up, follow these steps to deploy 
 
 ### LLM Chat Engine Deployment
 
-To deploy the LLM chat engine:
+### Hosted Instance
+A live instance of the LLM chat engine is deployed on Render Cloud and is available for testing and integration:
+- **Base URL**: `https://llm-chat-engine.onrender.com`
+- **Chat Endpoint**: `https://llm-chat-engine.onrender.com/api/chat`
+
+This endpoint is pre-configured in result `XR2IND-VR/Assets/Scripts/LLMScreen.cs` but can be replaced with your own deployment if needed.
+
+### Local Deployment
+
+To deploy the LLM chat engine locally:
 
 1. Clone the LLM-ChatEngine repository and navigate to the project directory.
 2. Set your OpenAI API key in the `Dockerfile` and `docker-compose.yml` files.

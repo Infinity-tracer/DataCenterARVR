@@ -1,78 +1,79 @@
 # XR2IND - Industrial VR Training Platform
 
-A comprehensive VR-based industrial training platform that combines immersive virtual reality environments with AI-powered language model assistance for enhanced training experiences.
+**XR2IND** is a cutting-edge industrial training platform that merges immersive Virtual Reality (VR) environments with advanced AI assistance. It provides a realistic, safe, and interactive space for trainees to master complex industrial hardware and maintenance procedures.
 
-## Project Structure
+## 🏗️ System Architecture
 
-```
-├── XR2IND-VR/          # Unity VR Application
-│   ├── Assets/         # Unity assets, scripts, and scenes
-│   ├── Packages/       # Unity package dependencies
-│   └── ProjectSettings/# Unity project configuration
-│
-└── llm-chat-engine/    # AI Backend Service
-    ├── app/            # FastAPI application
-    ├── Dockerfile      # Container configuration
-    └── docker-compose.yml
-```
+The platform consists of two main components working in tandem:
 
-## Components
+1.  **XR2IND-VR (Unity Application)**: The frontend VR experience running on Meta Quest 3, featuring realistic physics and interactions.
+2.  **LLM Chat Engine (AI Backend)**: A Python/FastAPI service powered by OpenAI and RAG (Retrieval-Augmented Generation) that acts as an intelligent virtual instructor.
 
-### XR2IND-VR (Unity Application)
-A Unity-based VR application for industrial training featuring:
-- **Tutorial Room**: VR controls familiarization for first-time users
-- **Assembly Room**: Hands-on router assembly training
-- **Troubleshooting Room**: Virtual routing room maintenance scenarios
+## 🥽 XR2IND-VR (The Virtual Environment)
 
-Interactive 3D models include:
-- Cisco ME4924
-- Juniper EX9204
-- Juniper MX480
+The VR application offers three distinct training environments designed to build competence progressively:
 
-### LLM Chat Engine (AI Backend)
-A FastAPI-based chatbot service providing:
-- Natural language understanding for maintenance queries
-- Document upload and RAG-based retrieval
-- Real-time streaming responses
-- Context-aware conversations
+*   **Tutorial Room**: A safe space for new users to acclimate to VR controls and interactions.
+*   **Assembly Room**: Focused on the intricate assembly of routers and switches from individual components.
+*   **Troubleshooting Room**: A realistic server room scenario where trainees diagnose and fix issues on live equipment.
 
-## Requirements
+### Interactive Hardware Models
+Trainees interact with high-fidelity 3D models of industry-standard networking gear:
+*   **Cisco ME4924**
+*   **Juniper EX9204**
+*   **Juniper MX480**
 
-### VR Application
-- Unity 2022.3.19f1
-- Meta Quest 3 headset
-- Meta Quest Link
+### Key Features
+*   **Interactive Whiteboard**: Displays real-time task objectives and status updates.
+*   **Full Component Interaction**: Manipulate line cards, routing engines, PSUs, fans, and cables.
+*   **Tool Usage**: precise control with electric screwdrivers and various cable types.
 
-### AI Backend
-- Docker & Docker Compose
-- OpenAI API key
-- Python 3.11+
+[👉 Learn more in the VR Application README](XR2IND-VR/README.md)
 
-## Quick Start
+## 🧠 LLM Chat Engine (The AI Instructor)
 
-### 1. Deploy the AI Backend
-```bash
-cd llm-chat-engine
-# Set your OpenAI API key in docker-compose.yml
-docker-compose up
-```
+The intelligent backend serves as an always-available mentor. It understands natural language queries and provides accurate, context-aware answers based on official maintenance manuals.
 
-### 2. Run the VR Application
-1. Open the project in Unity Hub
-2. Connect Meta Quest 3 via USB 3.0
-3. Enable Quest Link on the headset
-4. Open `Assets/Scenes/ScenarioSelect` scene
-5. Press Play in Unity Editor
+*   **Retrieval-Augmented Generation (RAG)**: Indexes technical manuals to ensure high accuracy.
+*   **Voice Interaction**: Seamless speech-to-text integration allows hands-free questioning during tasks.
+*   **Contextual Awareness**: Remembers conversation history for natural dialogue.
 
-## Documentation
+### Hosted Instance
+A live instance is available for the VR app to connect to immediately:
+*   **Base URL**: `https://llm-chat-engine.onrender.com`
+*   **Chat Endpoint**: `https://llm-chat-engine.onrender.com/api/chat`
 
-- [VR Application Details](XR2IND-VR/README.md)
-- [AI Backend API](llm-chat-engine/README.md)
+[👉 Learn more in the Chat Engine README](llm-chat-engine/README.md)
 
-## License
+## 🚀 Getting Started
+
+### Prerequisites
+*   **Hardware**: Meta Quest 3 Headset, VR-ready PC (for Link), USB 3.0 Cable.
+*   **Software**: Unity Hub, Unity 2022.3.19f1, Meta Quest Link App.
+
+### Quick Start Guide
+
+1.  **Deploy the Backend** (Optional if using the hosted instance):
+    *   Follow instructions in [llm-chat-engine/README.md](llm-chat-engine/README.md) to run locally using Docker.
+2.  **Setup the VR App**:
+    *   Open `XR2IND-VR` in Unity 2022.3.19f1.
+    *   Open the `Assets/Scenes/ScenarioSelect` scene.
+3.  **Connect & Play**:
+    *   Connect your Quest 3 via Air Link or Cable.
+    *   Press **Play** in the Unity Editor.
+
+## 📂 Resources & Downloads
+
+Explore the project further with these resources:
+
+[![Demo Video](https://img.shields.io/badge/🎥_Watch-Demo_Video-FF0000?style=for-the-badge)](DemoPrismVIdeo.mp4)
+[![Presentation](https://img.shields.io/badge/📄_View-Presentation_PDF-00599E?style=for-the-badge)](iMMERSIVIEW.pdf)
+[![Prism Report](https://img.shields.io/badge/📄_View-Project_Report-FF8C00?style=for-the-badge)](PrismReport.pdf)
+[![AI Disclosure](https://img.shields.io/badge/📄_View-AI_Disclosure-800080?style=for-the-badge)](AI_Disclosure_Final.pdf)
+[![APK](https://img.shields.io/badge/📱_Download-Installable_APK-3DDC84?style=for-the-badge)](SamsungPrismFInal.apk)
+
+> Click the tags above to view or download the files.
+
+## 📄 License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](XR2IND-VR/LICENSE) file for details.
-
-## Status
-
-🚧 **Work in Progress** - This project is currently under active development.

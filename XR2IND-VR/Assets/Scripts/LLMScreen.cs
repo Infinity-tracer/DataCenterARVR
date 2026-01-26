@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using HuggingFace.API;
 using TMPro;
 using UnityEngine;
+using System.Net;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 
@@ -43,6 +42,9 @@ public class LLMScreen : MonoBehaviour
 
 	void Start()
 	{
+		// Force TLS 1.2 (essential for modern web requests in Unity)
+		ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+		
 		text = textRect.GetComponent<TextMeshProUGUI>();
 		panelElements = new List<RectTransform> { textRect, loadingRect };
 		ShowCanvas(false);
@@ -66,6 +68,72 @@ public class LLMScreen : MonoBehaviour
 		
 		Debug.Log("LLMScreen initialized successfully");
 		Debug.Log("OpenAI API Key configured: " + (string.IsNullOrEmpty(openAIApiKey) ? "NO" : "YES"));
+		Debug.Log($"LLM Server URL: {llmServerUrl}");
+		
+		// Run network diagnostic test
+		StartCoroutine(TestNetworkConnectivity());
+	}
+	
+	private IEnumerator TestNetworkConnectivity()
+	{
+		Debug.LogError("🔍 DIAGNOSTIC STARTED: Running network connectivity check...");
+		
+		// 1. Check DNS Resolution
+		Debug.LogError($"🔍 Test 1: DNS Lookup for onrender.com");
+		try
+		{
+			IPHostEntry host = Dns.GetHostEntry("llm-chat-engine.onrender.com");
+			Debug.LogError($"✅ Test 1 PASSED: DNS Resolved to {host.AddressList[0]}");
+		}
+		catch (Exception e)
+		{
+			Debug.LogError($"❌ Test 1 FAILED: DNS Resolution Error: {e.Message}");
+		}
+		
+		// 2. Test Google (Reachability)
+		string googleUrl = "https://www.google.com";
+		Debug.LogError($"🔍 Test 2: Reachability (Google)");
+		
+		using (UnityWebRequest googleTest = UnityWebRequest.Get(googleUrl))
+		{
+			googleTest.timeout = 10;
+			yield return googleTest.SendWebRequest();
+			
+			if (googleTest.result == UnityWebRequest.Result.Success)
+			{
+				Debug.LogError($"✅ Test 2 PASSED: Google reachable");
+			}
+			else
+			{
+				Debug.LogError($"❌ Test 2 FAILED: Google unreachable: {googleTest.error}");
+			}
+		}
+		
+		// 3. Test LLM Server (GET)
+		Debug.LogError($"🔍 Test 3: LLM Server Reachability ({llmServerUrl})");
+		
+		using (UnityWebRequest result = UnityWebRequest.Get(llmServerUrl))
+		{
+			// Headers mimicking a browser
+			result.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+			result.SetRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*");
+			
+			result.timeout = 15;
+			yield return result.SendWebRequest();
+			
+			// 405 Method Not Allowed is GOOD - means we reached the server!
+			if (result.responseCode > 0)
+			{
+				Debug.LogError($"✅ Test 3 PASSED: Server Responded! Code: {result.responseCode}");
+			}
+			else
+			{
+				Debug.LogError($"❌ Test 3 FAILED: Connection Failed: {result.error}");
+				Debug.LogError($"Error Details: {result.downloadHandler?.text}");
+			}
+		}
+		
+		Debug.LogError("🔍 DIAGNOSTIC COMPLETE");
 	}
 
 	private void CheckMicrophoneAvailability()
@@ -343,39 +411,51 @@ public class LLMScreen : MonoBehaviour
 		request.Dispose();
 	}
 
-	public async void AskTheLLM(string prompt)
+	public void AskTheLLM(string prompt)
 	{
-		try
+		Debug.Log($"🤖 Asking LLM: {prompt}");
+		UpdateText($"You: {prompt}\n\n⏳ AI is thinking...\n(First request may take 30-60s if server is sleeping)");
+		StartCoroutine(SendLLMRequest(prompt));
+	}
+	
+	private IEnumerator SendLLMRequest(string prompt)
+	{
+		string jsonPayload = $@"{{
+			""messages"": [
+				{{
+					""role"": ""user"",
+					""content"": ""{EscapeJson(prompt)}""
+				}}
+			]
+		}}";
+		
+		Debug.Log($"📤 Sending to LLM: {llmServerUrl}");
+		Debug.Log($"📤 Payload: {jsonPayload}");
+		
+		// Use standard UnityWebRequest with using block for automatic disposal
+		using (UnityWebRequest request = new UnityWebRequest(llmServerUrl, "POST"))
 		{
-			Debug.Log($"🤖 Asking LLM: {prompt}");
-			UpdateText($"You: {prompt}\n\n⏳ AI is thinking...\n(First request may take 30-60s if server is sleeping)");
+			byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
+			request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+			request.downloadHandler = new DownloadHandlerBuffer();
 			
-			HttpClient client = new HttpClient();
-			client.Timeout = TimeSpan.FromSeconds(60);
+			// Set headers to mimic a browser
+			request.SetRequestHeader("Content-Type", "application/json");
+			request.SetRequestHeader("Accept", "application/json");
+			request.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 			
-			string jsonPayload = $@"{{
-				""messages"": [
-					{{
-						""role"": ""user"",
-						""content"": ""{EscapeJson(prompt)}""
-					}}
-				]
-			}}";
+			request.timeout = 60;
 			
-			Debug.Log($"📤 Sending to LLM: {jsonPayload}");
+			Debug.Log("📡 Sending POST request...");
+			yield return request.SendWebRequest();
 			
-			HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, llmServerUrl);
-			request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+			Debug.Log($"📊 Response Code: {request.responseCode}");
 			
-			HttpResponseMessage response = await client.SendAsync(request);
-			
-			Debug.Log($"📊 Response Status Code: {response.StatusCode}");
-			
-			string responseBody = await response.Content.ReadAsStringAsync();
-			Debug.Log($"📥 Raw Response: {responseBody}");
-			
-			if (response.IsSuccessStatusCode)
+			if (request.result == UnityWebRequest.Result.Success)
 			{
+				string responseBody = request.downloadHandler.text;
+				Debug.Log($"📥 Raw Response: {responseBody}");
+				
 				if (string.IsNullOrEmpty(responseBody))
 				{
 					NewLineTextAppend("AI: (Empty response)");
@@ -392,23 +472,23 @@ public class LLMScreen : MonoBehaviour
 			}
 			else
 			{
-				Debug.LogError($"❌ LLM HTTP Error: {response.StatusCode}");
-				Debug.LogError($"Error Body: {responseBody}");
-				NewLineTextAppend($"❌ AI Error: Server returned {response.StatusCode}");
+				Debug.LogError($"❌ LLM Error: {request.error}");
+				Debug.LogError($"Response Code: {request.responseCode}");
+				Debug.LogError($"Response: {request.downloadHandler?.text}");
+				
+				string errorMessage = "Connection failed.";
+				
+				if (request.responseCode == 0)
+				{
+					errorMessage = $"Network error: {request.error}\n(Check Console for Diagnostics)";
+				}
+				else
+				{
+					errorMessage = $"Server Error {request.responseCode}";
+				}
+				
+				NewLineTextAppend($"❌ AI Error: {errorMessage}");
 			}
-			
-			client.Dispose();
-		}
-		catch (System.Net.Http.HttpRequestException e)
-		{
-			Debug.LogError($"❌ LLM HTTP Error: {e.Message}");
-			NewLineTextAppend("❌ AI Error: Connection failed. Check if server is running.");
-		}
-		catch (Exception e)
-		{
-			Debug.LogError($"❌ LLM Error: {e.Message}");
-			Debug.LogError($"Stack trace: {e.StackTrace}");
-			NewLineTextAppend("❌ AI Error: " + e.Message);
 		}
 	}
 
@@ -571,4 +651,15 @@ public class LLMScreen : MonoBehaviour
 public class WhisperResponse
 {
 	public string text;
+}
+
+// Certificate handler to bypass SSL validation in development
+public class BypassCertificateHandler : CertificateHandler
+{
+	protected override bool ValidateCertificate(byte[] certificateData)
+	{
+		// Always accept certificates in development
+		// WARNING: Only use in development, not production!
+		return true;
+	}
 }

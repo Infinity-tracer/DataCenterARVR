@@ -37,7 +37,6 @@ XR2IND-VR/[Rr]ecordings/
 sysinfo.txt
 
 # Build outputs
-*.apk
 *.aab
 *.unitypackage
 *.app

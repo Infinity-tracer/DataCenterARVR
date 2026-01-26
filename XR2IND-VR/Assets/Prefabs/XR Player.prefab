@@ -14670,6 +14670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5eb35e8c22bb94382a590b30e15c2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  llmServerUrl: https://llm-chat-engine.onrender.com/api/chat
   toggleCanvas:
   - {fileID: 4843396707701969897, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   - {fileID: 440255563187449524, guid: c348712bda248c246b8c49b3db54643f, type: 3}
