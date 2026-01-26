@@ -19,11 +19,6 @@ public class LLMScreen : MonoBehaviour
 <<<<<<< HEAD
 	// TODO: Load the OpenAI API key securely (e.g., from environment variable, config, or Unity secret manager)
 	private const string openAIApiKey = ""; // DO NOT HARDCODE SECRETS
-=======
-	private const string openAIApiKey = "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";
->>>>>>> bb218e0 (Deployed LLM engine and MOdified the UI)
-=======
-	private const string openAIApiKey = "Your openAI API key here";
 >>>>>>> 23db5a7 (Added rendercloud config and Modified UI)
 	private const string OPENAI_WHISPER_URL = "https://api.openai.com/v1/audio/transcriptions";
 	
